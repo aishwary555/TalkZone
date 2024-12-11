@@ -1,0 +1,184 @@
+meet.js (short)
+
+Here’s how you can explain the `meet.js` file in simple and concise points:
+
+1. **Purpose**:  
+   - Defines a "Meeting" structure for storing data in MongoDB using Mongoose.
+
+2. **Schema Fields**:  
+   - **`meetingDate`**: Stores the meeting date as a required string.  
+   - **`meetingTime`**: Stores the meeting time as a required string.  
+   - **`emailIds`**: Stores a required list of attendee email addresses.  
+   - **`agenda`**: Stores the meeting purpose as a required string.
+
+3. **Model Creation**:  
+   - Uses the schema to create a `Meet` model, representing the "Meet" collection in the database.
+
+4. **Export**:  
+   - Makes the `Meet` model accessible to other files for database operations (e.g., adding or retrieving meetings).
+
+This keeps your explanation clear and to the point!
+
+
+
+
+Socket 
+
+In this project, **Socket.io** is used for real-time communication between the client and server to enable features like messaging, video calls, and whiteboard collaboration.
+
+### Key Uses of Socket.io:
+1. **Joining a Room**: 
+   - `socket.emit('join-room')` sends user info to the server when they enter a room.
+   
+2. **Messaging**: 
+   - Users send messages with `socket.emit('message')`, and the server broadcasts them using `socket.on('createMessage')`.
+
+3. **User Connection/Disconnection**: 
+   - `socket.on('user-connected')` and `socket.on('user-disconnected')` notify users when someone joins or leaves the room.
+
+4. **Whiteboard**: 
+   - `socket.emit('draw')` shares drawing data, and `socket.on('ondraw')` renders it on other users' screens.
+
+5. **Screen Sharing**: 
+   - `socket.emit('start-whiteboard')` is used to notify other users when someone starts screen sharing.
+
+6. **Participant List**: 
+   - `socket.emit('list')` requests the participant list, and `socket.on('lists')` sends it back.
+
+7. **Leaving Room**: 
+   - A `fetch('/home')` request is used to exit the room and navigate to the home page.
+
+**Socket.io** ensures real-time updates, smooth interaction, and synchronization of events across all users.
+
+
+
+
+
+
+script.js(short)
+
+Video and Audio Setup
+const socket = io('/'): Connects the client to the server via socket.io, using the root path.
+
+const videoGrid = document.getElementById('video-grid'): Selects the HTML element where videos will be displayed.
+
+var peer = new Peer(undefined, { path: '/peerjs', host: '/', port: '9000' }): Creates a new peer connection with a random ID to enable WebRTC.
+WebRTC (Web Real-Time Communication):
+A technology standard that enables real-time communication (e.g., video, audio, or data sharing) directly between browsers or applications without requiring a server for transmission.
+Commonly used in video conferencing apps, voice calls, and real-time data transfer.
+
+
+navigator.mediaDevices.getUserMedia: Asks for access to the user's camera and microphone:
+
+Streams video and audio.
+Saves the stream in myVideoStream and local_stream.
+Displays the user’s video on the page using addVideoStream.
+
+Integrated Flow:
+
+Capturing Media:
+Accesses the user's camera and microphone.
+
+Peer Connection:
+Sets up WebRTC connections using peer for video/audio streaming.
+
+Socket.IO:
+Facilitates room management and communication, such as notifying users of new connections or handling disconnections.
+
+User Interactions:
+Handles calls, displays video streams, and cleans up dynamically as users join or leave.
+
+
+Summary:
+Sends a message when the Enter key is pressed.
+Displays incoming messages with the sender's name.
+Removes a disconnected user's video from the video grid.
+
+
+
+whiteboard:
+1. **Whiteboard**: Users can toggle the whiteboard with a click. They can draw using different colors or erase. Drawing data is sent in real-time via `socket.emit('draw')`, and received with `socket.on('ondraw')`.
+
+2. **Real-Time Drawing**: Mouse events track drawing on the canvas. Coordinates are stored in **paths** and drawn using the 2D canvas context (`context.stroke()`).
+
+3. **Toggle Video/Whiteboard**: When the whiteboard is active, it hides the video grid and shows the whiteboard. CSS changes control visibility.
+
+4. **Peer Connection**: **PeerJS** sets up a WebRTC connection with a unique ID. Users join a room with `socket.emit('join-room')`.
+
+5. **Messaging**: **Enter key** sends messages through `socket.emit('message')`. Messages are displayed with `socket.on('createMessage')`.
+
+6. **User Disconnect**: When a user leaves, their video element is removed with `videoElement.remove()`.
+
+This concise summary includes key concepts like **WebRTC**, **socket communication**, **DOM manipulation**, and **canvas drawing**.
+
+
+Screen sharing
+
+This code implements a real-time video conferencing system with the following key features:
+
+1. **Screen Sharing**: Uses `navigator.mediaDevices.getDisplayMedia()` to capture the user's screen and replace the webcam video track in WebRTC connections via `replaceTrack()`.
+
+2. **Video Stream Management**: Media streams are handled using `video.srcObject = stream` to display video and `video.play()` once metadata is loaded. Video streams are added to the DOM with `videoGrid.append()`.
+
+3. **Audio Control**: Audio tracks are muted or unmuted using `getAudioTracks()[0].enabled` and toggled with `muteUnmute()`.
+
+4. **Chat Window**: Automatically scrolls to the bottom with `scrollTop(t.prop("scrollHeight"))` when new messages are sent.
+
+5. **Meeting Management**: Users can leave the meeting using `fetch()` and redirect to another page. Room ID sharing is done using a prompt with `prompt()`.
+
+6. **Event Listeners**: Event listeners like `click`, `mousedown`, `mouseup`, and `mousemove` are used for handling actions like screen share toggling, drawing on a whiteboard, and managing media streams.
+
+Technical tools used include **WebRTC** for peer-to-peer connections, **MediaDevices API** for capturing video/audio, and **DOM manipulation** for managing video elements and user interface interactions.
+
+
+
+This code integrates Google OAuth 2.0 authentication into a Node.js app using the passport library and passport-google-oauth2 strategy.
+Key Points:
+Google Strategy:
+Configures Google login with clientID, clientSecret, and callbackURL. Handles user info (profile) after successful login.
+
+Session Handling:
+
+serializeUser: Saves user info to the session.
+deserializeUser: Retrieves user info from the session.
+This setup allows login via Google and session persistence for authenticated users.
+
+
+
+
+This code builds a **video conferencing app** using `Express`, `Socket.IO`, `PeerJS`, and `Passport` for **Google OAuth 2.0 authentication**.  
+
+### Key Functionalities:
+
+1. **Server Setup**:  
+   - Express app (`app`) and HTTP server (`server`) created.  
+   - `Socket.IO` (`io`) manages real-time communication.  
+   - `PeerJS` handles WebRTC connections for video calls.  
+
+2. **Google OAuth**:  
+   - Configured with `passport` and `passport-google-oauth2`.  
+   - Authenticates users and redirects to `/home` on success.  
+
+3. **Meeting Management**:  
+   - Routes:
+     - `/meet`: Creates a random meeting room with `uuidV4`.  
+     - `/meeting`: Loads the "schedule meeting" page.  
+   - **Meeting Scheduling**:  
+     - Saves meeting data in MongoDB (`Meet` model).  
+     - Sends email reminders via `nodemailer`.  
+
+4. **Socket.IO Features**:  
+   - **Joining Rooms**: Users join specific rooms by `roomID`.  
+   - **Chat**: Handles messages and broadcasts them to the room.  
+   - **Whiteboard**: Real-time drawing shared across participants.  
+   - **Participants List**: Manages and displays room attendees.  
+   - **User Disconnect**: Removes participants on disconnection.  
+
+5. **Room Access**:  
+   - Dynamic routes (`/:room`) render meeting rooms with `EJS`.  
+
+6. **Port Configuration**:  
+   - App runs on `localhost:3000`.  
+   - PeerJS server listens on port `9000`.  
+
+This creates a fully functional **real-time video meeting app** with authentication, chat, whiteboard, and meeting scheduling capabilities.
